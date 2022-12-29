@@ -10,7 +10,7 @@ namespace Core.Specifications
     {
         public BaseSpecification()
         {
-            Criteria = null!;
+            // Criteria = null!;
         }
 
         public BaseSpecification(Expression<Func<T, bool>> criteria)
@@ -18,14 +18,41 @@ namespace Core.Specifications
             Criteria = criteria;
         }
 
-        public Expression<Func<T, bool>> Criteria { get; }
+        public Expression<Func<T, bool>> Criteria { get; } = null!;
 
         public List<Expression<Func<T, object>>> Includes { get; } =
             new List<Expression<Func<T, object>>>();
 
+        public Expression<Func<T, object>> OrderBy { get; private set; } = null!;
+
+        public Expression<Func<T, object>> OrderByDescending { get; private set; } = null!;
+
+        public int Task { get; private set; }
+
+        public int Skip { get; private set; }
+
+        public bool IsPagingEnabled { get; private set; }
+
         protected void AddInclude(Expression<Func<T, object>> IncludeExpression)
         {
             Includes.Add(IncludeExpression);
+        }
+
+        protected void AddOrderBy(Expression<Func<T, object>> orderByExpressipon)
+        {
+            OrderBy = orderByExpressipon;
+        }
+
+        protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpressipon)
+        {
+            OrderByDescending = orderByDescExpressipon;
+        }
+
+        protected void ApplyPaging(int skip, int take)
+        {
+            Skip = skip;
+            Task = take;
+            IsPagingEnabled = true;
         }
     }
 }
